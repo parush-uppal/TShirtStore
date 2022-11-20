@@ -54,16 +54,17 @@ userSchema.pre('save',async function(next){
 })
 
 // validate password with passed on user password
-userSchema.methods.IsvalidatedPassword = async function(usersendPassword){
-   return await bcrypt.compare(usersendPassword,this.password)
-};
+userSchema.methods.isValidatedPassword = async function (usersendPassword) {
+    return await bcrypt.compare(usersendPassword, this.password);
+  };
 
 // creating and returning jwt token
-userSchema.methods.getJwtToken = function(){
-    return jwt.sign({id:this.id}, process.env.JWT_SECRET,{
-        expiresIn:process.env.JWT_EXPIRY,
-    })
-}
+userSchema.methods.getJwtToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRY,
+    });
+  };
+  
 
 // generate forgot password token (string)
 userSchema.methods.getForgotPasswordToken = function(){
@@ -74,7 +75,7 @@ userSchema.methods.getForgotPasswordToken = function(){
     this.forgotPasswordToken = crypto.createHash('sha256').update(forgotToken).digest('hex')
  
    // time of token 
-   this.forgotPasswordExpiry = Date.now() + 20 * 60 
+   this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000;
    return forgotToken
 }
 
